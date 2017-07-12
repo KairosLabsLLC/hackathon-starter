@@ -24,6 +24,18 @@ const foursquare = require('node-foursquare')({
 foursquare.Venues = bluebird.promisifyAll(foursquare.Venues);
 foursquare.Users = bluebird.promisifyAll(foursquare.Users);
 
+const connectSdk = require('connect-sdk-nodejs');
+
+connectSdk.init({
+  host: process.env.INGENICO_ENDPOINT_HOST,
+  scheme: "https",
+  port: 443,
+  apiKeyId: process.env.INGENICO_KEY_ID,
+  secretApiKey: process.env.INGENICO_SECRET
+});
+
+const ingenicoMerchantID = process.env.INGENICO_MERCHANT_ID;
+
 /**
  * GET /api
  * List of API examples.
@@ -634,3 +646,40 @@ exports.getIngenico = (req, res) => {
     title: 'ingenico API'
   });
 };
+
+exports.postIngenicoHostedCheckout = (req, res) => {
+  const amount = Number(req.body.amount);
+
+  const data = {
+    order: {
+      amountOfMoney: {
+        currencyCode: "USD",
+        amount: amount
+      },
+      customer: {
+        merchantCustomerId: "1234",
+        billingAddress: {
+          countryCode: "US"
+        }
+      }
+    },
+    hostedCheckoutSpecificInput: {
+      variant: "testVariant",
+      locale: "en_GB"
+    }
+  }
+
+  connectSdk.hostedcheckouts.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
+    console.log(sdkResponse)
+
+    if (sdkResponse.body.errors) {
+      req.flash('errors', { msg: 'Your card has been declined.' });
+      return res.redirect('/api/ingenico');
+    }
+
+    req.flash('success', { msg: 'Your card has been successfully charged.' });
+    res.redirect('https://payment.'+sdkResponse.body.partialRedirectUrl);
+
+  });
+
+}

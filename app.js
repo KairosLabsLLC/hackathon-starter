@@ -169,6 +169,8 @@ app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuth
 app.get('/api/google-maps', apiController.getGoogleMaps);
 app.get('/api/ingenico', apiController.getIngenico);
 
+app.post('/api/ingenico', apiController.postIngenicoHostedCheckout)
+
 /**
  * OAuth authentication routes. (Sign in)
  */
