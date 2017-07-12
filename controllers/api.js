@@ -624,3 +624,13 @@ exports.getGoogleMaps = (req, res) => {
     title: 'Google Maps API'
   });
 };
+
+/**
+ * GET /api/ingenico
+ * Ingenico API example.
+ */
+exports.getIngenico = (req, res) => {
+  res.render('api/ingenico', {
+    title: 'ingenico API'
+  });
+};

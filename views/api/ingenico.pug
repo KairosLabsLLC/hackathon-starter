@@ -1,0 +1,60 @@
+extends ../layout
+
+block content
+  .page-header
+    h2 Ingenico Connect API
+
+  .btn-group.btn-group-justified
+    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/documentation/hosted-payment-pages/')
+      i.fa.fa-home
+      | Hosted Payments
+    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/documentation/api/', target='_blank')
+      i.fa.fa-code
+      | API Reference
+    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/signup-for-sandbox/', target='_blank')
+      i.fa.fa-gear
+      | Get Sandbox API Keys
+
+  br
+
+  form(method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='3500')
+    input(type='submit', class='btn btn-primary', value='Authorize Payment of $35.00')
+
+  h3
+    i.fa.fa-credit-card
+    | Test Cards
+  p In test mode, you can use these test cards to simulate a successful transaction:
+
+  table.table.table-striped.table-bordered.table-condensed
+    thead
+      tr
+        th Number
+        th CVV
+        th Amount
+      tbody
+        tr
+          td 4012000033330026
+          td 123
+          td 3500
+        tr
+          td 5424180279791732
+          td 123
+          td 2200
+        tr
+          td 4567350000427977
+          td 123
+          td 4005
+
+  .panel.panel-primary
+    .panel-heading Ingenico Successful Charge Example
+    .panel-body
+      p This is the response you will get when customer's card has been charged successfully.
+        | You could use some of the data below for logging purposes.
+      pre.
+        {
+          "partialRedirectUrl" : "poweredbyglobalcollect.com/pay8915-53ebca407e6b4a1dbd086aad4f10354d:8915-28e5b79c889641c8ba770f1ba576c1fe:9798f4c44ac6406e8288494332d1daa0",
+          "hostedCheckoutId" : "8915-28e5b79c889641c8ba770f1ba576c1fe",
+          "RETURNMAC" : "f5b66cf9-c64c-4c8d-8171-b47205c89a56"
+        }
