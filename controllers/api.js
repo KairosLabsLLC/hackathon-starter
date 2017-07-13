@@ -680,9 +680,9 @@ exports.postIngenicoHostedCheckout = (req, res) => {
 };
 
 exports.getIngenicoPaymentProducts = (req, res) => {
-  const countryCode = req.query.countryCode || 'US';
-  const locale = req.query.locale || 'en_US';
-  const currencyCode = req.query.currencyCode || 'USD';
+  const countryCode = req.query.countryCode;
+  const locale = req.query.locale;
+  const currencyCode = req.query.currencyCode;
   const amount = Number(req.query.amount);
 
   const data = {
@@ -698,8 +698,8 @@ exports.getIngenicoPaymentProducts = (req, res) => {
 
   connectSdk.products.find(ingenicoMerchantID, data, (error, sdkResponse) => {
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your query could not be processed.' });
-      return res.redirect('/api/ingenico');
+      console.warn('Your query could not be processed')
+      return res.send(JSON.stringify(sdkResponse));
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -708,10 +708,10 @@ exports.getIngenicoPaymentProducts = (req, res) => {
 };
 
 exports.getIngenicoPaymentProduct = (req, res) => {
-  const countryCode = req.query.countryCode || 'US';
-  const locale = req.query.locale || 'en_US';
-  const currencyCode = req.query.currencyCode || 'USD';
-  const amount = Number(req.query.amount || '1000');
+  const countryCode = req.query.countryCode;
+  const locale = req.query.locale;
+  const currencyCode = req.query.currencyCode;
+  const amount = Number(req.query.amount);
   const productId = Number(req.params.productId);
 
   const data = {
@@ -724,8 +724,8 @@ exports.getIngenicoPaymentProduct = (req, res) => {
 
   connectSdk.products.get(ingenicoMerchantID, productId, data, (error, sdkResponse) => {
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your query could not be processed.' });
-      return res.redirect('/api/ingenico');
+      console.warn('Your query could not be processed')
+      return res.send(JSON.stringify(sdkResponse));
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -735,33 +735,46 @@ exports.getIngenicoPaymentProduct = (req, res) => {
 
 exports.postIngenicoPayment = (req, res) => {
   const amount = Number(req.body.amount);
+  const cvv = req.body.cvv;
+  const cardholderName = req.body.cardholderName;
+  const cardNumber = req.body.cardNumber;
+  const expiryDate = req.body.expiryDate;
+  const currencyCode = req.body.currencyCode;
+  const locale = req.body.locale;
+  const additionalInfo = req.body.additionalInfo;
+  const countryCode = req.body.countryCode;
+  const zip = req.body.zip;
+  const city = req.body.city;
+  const state = req.body.state;
+  const street = req.body.street;
+  const houseNumber = req.body.houseNumber;
 
   const data = {
     cardPaymentMethodSpecificInput: {
       paymentProductId: 1,
       skipAuthentication: false,
       card: {
-        cvv: '123',
-        cardholderName: 'Wile E. Coyote',
-        cardNumber: '4567350000427977',
-        expiryDate: '1220'
+        cvv,
+        cardholderName,
+        cardNumber,
+        expiryDate,
       }
     },
     order: {
       amountOfMoney: {
-        currencyCode: 'EUR',
+        currencyCode,
         amount
       },
       customer: {
-        locale: 'en_US',
+        locale,
         billingAddress: {
-          additionalInfo: 'b',
-          countryCode: 'US',
-          zip: '84536',
-          city: 'Monument Valley',
-          state: 'Utah',
-          street: 'Desertroad',
-          houseNumber: '13'
+          additionalInfo,
+          countryCode,
+          zip,
+          city,
+          state,
+          street,
+          houseNumber
         },
       },
     }
@@ -769,8 +782,8 @@ exports.postIngenicoPayment = (req, res) => {
 
   connectSdk.payments.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your query could not be processed.' });
-      return res.redirect('/api/ingenico');
+      console.warn('Your query could not be processed')
+      return res.send(JSON.stringify(sdkResponse));
     }
 
     res.setHeader('Content-Type', 'application/json');
