@@ -670,7 +670,6 @@ exports.postIngenicoHostedCheckout = (req, res) => {
   }
 
   connectSdk.hostedcheckouts.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
-    console.log(sdkResponse)
 
     if (sdkResponse.body.errors) {
       req.flash('errors', { msg: 'Your card has been declined.' });
@@ -679,6 +678,114 @@ exports.postIngenicoHostedCheckout = (req, res) => {
 
     req.flash('success', { msg: 'Your card has been successfully charged.' });
     res.redirect('https://payment.'+sdkResponse.body.partialRedirectUrl);
+
+  });
+
+}
+
+exports.getIngenicoPaymentProducts = (req, res) => {
+  const countryCode = req.query.countryCode || "US";
+  const locale = req.query.locale || "en_US";
+  const currencyCode = req.query.currencyCode ||"USD";
+  const amount = Number(req.query.amount);
+
+  const data = {
+    hide: [
+      "fields"
+    ],
+    isRecurring: true,
+    countryCode: countryCode,
+    locale: locale,
+    currencyCode: currencyCode,
+    amount: amount
+  };
+
+  connectSdk.products.find(ingenicoMerchantID, data, function (error, sdkResponse) {
+    console.log(error)
+    console.log(sdkResponse)
+
+    if (sdkResponse.body.errors) {
+      req.flash('errors', { msg: 'Your query could not be processed.' });
+      return res.redirect('/api/ingenico');
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
+  });
+
+}
+
+exports.getIngenicoPaymentProduct = (req, res) => {
+  const countryCode = req.query.countryCode || "US";
+  const locale = req.query.locale || "en_US";
+  const currencyCode = req.query.currencyCode ||"USD";
+  const amount = Number(req.query.amount || '1000');
+  const productId = Number(req.params.productId);
+
+  const data = {
+    isRecurring: true,
+    countryCode: countryCode,
+    locale: locale,
+    currencyCode: currencyCode,
+    amount: amount
+  };
+
+  connectSdk.products.get(ingenicoMerchantID, productId, data, function (error, sdkResponse) {
+
+    if (sdkResponse.body.errors) {
+      req.flash('errors', { msg: 'Your query could not be processed.' });
+      return res.redirect('/api/ingenico');
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
+  });
+
+}
+
+exports.postIngenicoPayment = (req, res) => {
+  const amount = Number(req.body.amount);
+
+  const data = {
+    cardPaymentMethodSpecificInput: {
+      paymentProductId: 1,
+      skipAuthentication: false,
+      card: {
+        cvv: "123",
+        cardholderName: "Wile E. Coyote",
+        cardNumber: "4567350000427977",
+        expiryDate: "1220"
+      }
+    },
+    order: {
+      amountOfMoney: {
+        currencyCode: "EUR",
+        amount: amount
+      },
+      customer: {
+        locale: "en_US",
+        billingAddress: {
+          additionalInfo: "b",
+          countryCode: "US",
+          zip: "84536",
+          city: "Monument Valley",
+          state: "Utah",
+          street: "Desertroad",
+          houseNumber: "13"
+        },
+      },
+    }
+  };
+
+  connectSdk.payments.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
+
+    if (sdkResponse.body.errors) {
+      req.flash('errors', { msg: 'Your query could not be processed.' });
+      return res.redirect('/api/ingenico');
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
 
   });
 

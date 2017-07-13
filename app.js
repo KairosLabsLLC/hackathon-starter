@@ -168,8 +168,10 @@ app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAutho
 app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 app.get('/api/ingenico', apiController.getIngenico);
-
 app.post('/api/ingenico', apiController.postIngenicoHostedCheckout)
+app.get('/api/ingenico-products', apiController.getIngenicoPaymentProducts);
+app.get('/api/ingenico-products/:productId', apiController.getIngenicoPaymentProduct);
+app.post('/api/ingenico-payment', apiController.postIngenicoPayment)
 
 /**
  * OAuth authentication routes. (Sign in)
