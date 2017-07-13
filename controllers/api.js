@@ -697,10 +697,8 @@ exports.getIngenicoPaymentProducts = (req, res) => {
   };
 
   connectSdk.products.find(ingenicoMerchantID, data, (error, sdkResponse) => {
-    if (sdkResponse.body.errors) {
+    if (sdkResponse.body.errors)
       console.warn('Your query could not be processed')
-      return res.send(JSON.stringify(sdkResponse));
-    }
 
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
@@ -723,10 +721,8 @@ exports.getIngenicoPaymentProduct = (req, res) => {
   };
 
   connectSdk.products.get(ingenicoMerchantID, productId, data, (error, sdkResponse) => {
-    if (sdkResponse.body.errors) {
+    if (sdkResponse.body.errors)
       console.warn('Your query could not be processed')
-      return res.send(JSON.stringify(sdkResponse));
-    }
 
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
@@ -781,10 +777,8 @@ exports.postIngenicoPayment = (req, res) => {
   };
 
   connectSdk.payments.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
-    if (sdkResponse.body.errors) {
+    if (sdkResponse.body.errors)
       console.warn('Your query could not be processed')
-      return res.send(JSON.stringify(sdkResponse));
-    }
 
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
