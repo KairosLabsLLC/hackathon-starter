@@ -7,7 +7,7 @@ $(document).ready(function() {
     var codeResponse = $('#ingenico-products-response')
 
     $.ajax({
-      url: '/api/ingenico-products?amount=10000',
+      url: '/api/ingenico-products?amount=10000&countryCode=US&locale=en_US&currencyCode=USD',
       method: 'GET',
       success: function(data){
         codeResponse.empty()
@@ -26,7 +26,7 @@ $(document).ready(function() {
     var codeResponse = $('#ingenico-product-response')
 
     $.ajax({
-      url: '/api/ingenico-products/1',
+      url: '/api/ingenico-products/1?amount=10000&countryCode=US&locale=en_US&currencyCode=USD',
       method: 'GET',
       success: function(data){
         codeResponse.empty()
