@@ -28,7 +28,7 @@ const connectSdk = require('connect-sdk-nodejs');
 
 connectSdk.init({
   host: process.env.INGENICO_ENDPOINT_HOST,
-  scheme: "https",
+  scheme: 'https',
   port: 443,
   apiKeyId: process.env.INGENICO_KEY_ID,
   secretApiKey: process.env.INGENICO_SECRET
@@ -653,57 +653,50 @@ exports.postIngenicoHostedCheckout = (req, res) => {
   const data = {
     order: {
       amountOfMoney: {
-        currencyCode: "USD",
-        amount: amount
+        currencyCode: 'USD',
+        amount
       },
       customer: {
-        merchantCustomerId: "1234",
+        merchantCustomerId: '1234',
         billingAddress: {
-          countryCode: "US"
+          countryCode: 'US'
         }
       }
     },
     hostedCheckoutSpecificInput: {
-      variant: "testVariant",
-      locale: "en_GB"
+      variant: 'testVariant',
+      locale: 'en_GB'
     }
-  }
+  };
 
   connectSdk.hostedcheckouts.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
-
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your card has been declined.' });
+      req.flash('errors', { msg: 'Your query could not be processed.' });
       return res.redirect('/api/ingenico');
     }
 
-    req.flash('success', { msg: 'Your card has been successfully charged.' });
-    res.redirect('https://payment.'+sdkResponse.body.partialRedirectUrl);
-
+    res.redirect(`https://payment.${sdkResponse.body.partialRedirectUrl}`);
   });
-
-}
+};
 
 exports.getIngenicoPaymentProducts = (req, res) => {
-  const countryCode = req.query.countryCode || "US";
-  const locale = req.query.locale || "en_US";
-  const currencyCode = req.query.currencyCode ||"USD";
+  const countryCode = req.query.countryCode || 'US';
+  const locale = req.query.locale || 'en_US';
+  const currencyCode = req.query.currencyCode || 'USD';
   const amount = Number(req.query.amount);
 
   const data = {
     hide: [
-      "fields"
+      'fields'
     ],
     isRecurring: true,
-    countryCode: countryCode,
-    locale: locale,
-    currencyCode: currencyCode,
-    amount: amount
+    countryCode,
+    locale,
+    currencyCode,
+    amount
   };
 
-  connectSdk.products.find(ingenicoMerchantID, data, function (error, sdkResponse) {
-    console.log(error)
-    console.log(sdkResponse)
-
+  connectSdk.products.find(ingenicoMerchantID, data, (error, sdkResponse) => {
     if (sdkResponse.body.errors) {
       req.flash('errors', { msg: 'Your query could not be processed.' });
       return res.redirect('/api/ingenico');
@@ -712,26 +705,24 @@ exports.getIngenicoPaymentProducts = (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
   });
-
-}
+};
 
 exports.getIngenicoPaymentProduct = (req, res) => {
-  const countryCode = req.query.countryCode || "US";
-  const locale = req.query.locale || "en_US";
-  const currencyCode = req.query.currencyCode ||"USD";
+  const countryCode = req.query.countryCode || 'US';
+  const locale = req.query.locale || 'en_US';
+  const currencyCode = req.query.currencyCode || 'USD';
   const amount = Number(req.query.amount || '1000');
   const productId = Number(req.params.productId);
 
   const data = {
     isRecurring: true,
-    countryCode: countryCode,
-    locale: locale,
-    currencyCode: currencyCode,
-    amount: amount
+    countryCode,
+    locale,
+    currencyCode,
+    amount
   };
 
-  connectSdk.products.get(ingenicoMerchantID, productId, data, function (error, sdkResponse) {
-
+  connectSdk.products.get(ingenicoMerchantID, productId, data, (error, sdkResponse) => {
     if (sdkResponse.body.errors) {
       req.flash('errors', { msg: 'Your query could not be processed.' });
       return res.redirect('/api/ingenico');
@@ -740,8 +731,7 @@ exports.getIngenicoPaymentProduct = (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
   });
-
-}
+};
 
 exports.postIngenicoPayment = (req, res) => {
   const amount = Number(req.body.amount);
@@ -751,34 +741,33 @@ exports.postIngenicoPayment = (req, res) => {
       paymentProductId: 1,
       skipAuthentication: false,
       card: {
-        cvv: "123",
-        cardholderName: "Wile E. Coyote",
-        cardNumber: "4567350000427977",
-        expiryDate: "1220"
+        cvv: '123',
+        cardholderName: 'Wile E. Coyote',
+        cardNumber: '4567350000427977',
+        expiryDate: '1220'
       }
     },
     order: {
       amountOfMoney: {
-        currencyCode: "EUR",
-        amount: amount
+        currencyCode: 'EUR',
+        amount
       },
       customer: {
-        locale: "en_US",
+        locale: 'en_US',
         billingAddress: {
-          additionalInfo: "b",
-          countryCode: "US",
-          zip: "84536",
-          city: "Monument Valley",
-          state: "Utah",
-          street: "Desertroad",
-          houseNumber: "13"
+          additionalInfo: 'b',
+          countryCode: 'US',
+          zip: '84536',
+          city: 'Monument Valley',
+          state: 'Utah',
+          street: 'Desertroad',
+          houseNumber: '13'
         },
       },
     }
   };
 
   connectSdk.payments.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
-
     if (sdkResponse.body.errors) {
       req.flash('errors', { msg: 'Your query could not be processed.' });
       return res.redirect('/api/ingenico');
@@ -786,7 +775,5 @@ exports.postIngenicoPayment = (req, res) => {
 
     res.setHeader('Content-Type', 'application/json');
     return res.send(sdkResponse);
-
   });
-
-}
+};
