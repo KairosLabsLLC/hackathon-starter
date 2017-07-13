@@ -5,13 +5,13 @@ block content
     h2 Ingenico Connect API
 
   .btn-group.btn-group-justified
-    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/documentation/hosted-payment-pages/')
+    a.btn(style='background-color: #2869AC;color: #FFF', href='https://epayments.developer-ingenico.com/documentation/hosted-payment-pages/')
       i.fa.fa-home
       | Hosted Payments
-    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/documentation/api/', target='_blank')
+    a.btn(style='background-color: #2869AC;color: #FFF', href='https://epayments.developer-ingenico.com/documentation/api/', target='_blank')
       i.fa.fa-code
       | API Reference
-    a.btn.btn-primary(href='https://epayments.developer-ingenico.com/signup-for-sandbox/', target='_blank')
+    a.btn(style='background-color: #2869AC;color: #FFF', href='https://epayments.developer-ingenico.com/signup-for-sandbox/', target='_blank')
       i.fa.fa-gear
       | Get Sandbox API Keys
 
@@ -20,7 +20,7 @@ block content
   form(method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     input(type='hidden', name='amount', value='3500')
-    input(type='submit', class='btn btn-primary', value='Authorize Payment of $35.00')
+    input(style='background-color: #2869AC;color: #FFF',type='submit', class='btn', value='Hosted Payment of $35.00')
 
   h3
     i.fa.fa-credit-card
@@ -47,14 +47,126 @@ block content
           td 123
           td 4005
 
-  .panel.panel-primary
-    .panel-heading Ingenico Successful Charge Example
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Hosted Payment Page
     .panel-body
-      p This is the response you will get when customer's card has been charged successfully.
-        | You could use some of the data below for logging purposes.
+      p This is the response you will get when there's a successful request for a hosted
+        | checkout. The partialRedirectUrl field needs a subdomain that is now defaulted
+        | to payments.
       pre.
         {
           "partialRedirectUrl" : "poweredbyglobalcollect.com/pay8915-53ebca407e6b4a1dbd086aad4f10354d:8915-28e5b79c889641c8ba770f1ba576c1fe:9798f4c44ac6406e8288494332d1daa0",
           "hostedCheckoutId" : "8915-28e5b79c889641c8ba770f1ba576c1fe",
           "RETURNMAC" : "f5b66cf9-c64c-4c8d-8171-b47205c89a56"
         }
+
+  hr
+  .row
+    .col-xs-12.col-md-12.col-lg-12.center
+        img(style='align: middle;', src='http://i.imgur.com/AXbjIqg.png', class='img-responsive inline-block')
+  br
+  br
+
+  form(method='get', action='/api/ingenico-products')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='3500')
+    input(style='background-color: #2869AC;color: #FFF', id='ingenico-products', type='submit', class='btn', value='List of payment products')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Payment Products Query
+    .panel-body
+      p The fields for this request was hidden to save space but based on the query, a
+        |  successful response would have an array of paymentProducts with relevant fields.
+      pre.
+        const data = {
+          hide: [
+            "fields"
+          ],
+          isRecurring: true,
+          countryCode: 'US',
+          locale: 'en_US',
+          currencyCode: 'USD',
+          amount: 10000
+        };
+      br
+      h3 Connect SDK Response
+      div(id="ingenico-products-response")
+        pre
+
+  form(method='get', action='/api/ingenico-products/1')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='10000')
+    input(style='background-color: #2869AC;color: #FFF', id='ingenico-specific-product', type='submit', class='btn', value='Specific of the payment product')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Payment Product Query
+    .panel-body
+      p The request is for a specific payment product and would require the id as an
+        | argument. It contains data and validations for the fields needed for a
+        | payment to be successfully processed.
+      pre.
+        const productId = Number(req.params.productId);
+        const data = {
+          isRecurring: true,
+          countryCode: 'US',
+          locale: 'en_US',
+          currencyCode: 'USD',
+          amount: 10000
+        };
+      br
+      h3 Connect SDK Response
+      div(id="ingenico-product-response")
+        pre
+
+  form(id='ingenico-payment', method='post', action='/api/ingenico-payment')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='2980')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Make a payment of 29.80 eur')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Example of a successful payment creation response
+    .panel-body
+      p The request is for a charge to me made with a minimum amount of fields needed
+        | It contains data on the status of the payment as well as come card info used to
+        | process the request.
+      pre.
+        const data = {
+          cardPaymentMethodSpecificInput: {
+            paymentProductId: 1,
+            skipAuthentication: false,
+            card: {
+              cvv: "123",
+              cardholderName: "Wile E. Coyote",
+              cardNumber: "4567350000427977",
+              expiryDate: "1220"
+            }
+          },
+          order: {
+            amountOfMoney: {
+              currencyCode: "EUR",
+              amount: 2980
+            },
+            customer: {
+              locale: "en_US",
+              billingAddress: {
+                additionalInfo: "b",
+                countryCode: "US",
+                zip: "84536",
+                city: "Monument Valley",
+                state: "Utah",
+                street: "Desertroad",
+                houseNumber: "13"
+              },
+            },
+          }
+        };
+      br
+      h3 Connect SDK Response
+      div(id="ingenico-payment-response")
+        pre
