@@ -680,9 +680,9 @@ exports.postIngenicoHostedCheckout = (req, res) => {
 };
 
 exports.getIngenicoPaymentProducts = (req, res) => {
-  const countryCode = req.query.countryCode;
-  const locale = req.query.locale;
-  const currencyCode = req.query.currencyCode;
+  const countryCode = req.query.countryCode || 'US';
+  const locale = req.query.locale || 'en_US';
+  const currencyCode = req.query.currencyCode || 'USD';
   const amount = Number(req.query.amount);
 
   const data = {
@@ -706,9 +706,9 @@ exports.getIngenicoPaymentProducts = (req, res) => {
 };
 
 exports.getIngenicoPaymentProduct = (req, res) => {
-  const countryCode = req.query.countryCode;
-  const locale = req.query.locale;
-  const currencyCode = req.query.currencyCode;
+  const countryCode = req.query.countryCode || 'US';
+  const locale = req.query.locale || 'en_US';
+  const currencyCode = req.query.currencyCode || 'USD';
   const amount = Number(req.query.amount);
   const productId = Number(req.params.productId);
 
