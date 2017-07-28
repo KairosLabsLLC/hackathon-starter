@@ -642,6 +642,16 @@ exports.getGoogleMaps = (req, res) => {
  * Ingenico API example.
  */
 exports.getIngenico = (req, res) => {
+  const status = req.query.status;
+  const hostedCheckoutId = req.query.hostedCheckoutId;
+  const returnmac = req.query.RETURNMAC;
+
+  if (status === 'SUCCESS'){
+    // This is the point where the hostedCheckoutId and RETURNMAC could be used to save
+    // the payment status in a database
+    req.flash('success', { msg: 'Your hosted payment has been received.' });
+  }
+
   res.render('api/ingenico', {
     title: 'ingenico API'
   });
@@ -664,13 +674,15 @@ exports.postIngenicoHostedCheckout = (req, res) => {
       }
     },
     hostedCheckoutSpecificInput: {
-      variant: "testVariant",
+      variant: "102",
       locale: "en_GB"
     }
   }
 
   connectSdk.hostedcheckouts.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
-    console.log(sdkResponse)
+    // In order to record the hosted checkout status, the sdkResponse body has a
+    // hostedCheckoutId that could be saved to compare to a successful redirect back from
+    // the payment page
 
     if (sdkResponse.body.errors) {
       req.flash('errors', { msg: 'There was a problem with the checkout and we can not redirect you at this time.' });
