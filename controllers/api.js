@@ -673,11 +673,11 @@ exports.postIngenicoHostedCheckout = (req, res) => {
     console.log(sdkResponse)
 
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your card has been declined.' });
+      req.flash('errors', { msg: 'There was a problem with the checkout and we can not redirect you at this time.' });
       return res.redirect('/api/ingenico');
     }
 
-    req.flash('success', { msg: 'Your card has been successfully charged.' });
+    req.flash('success', { msg: 'You will be redirected shortly to the payment page.' });
     res.redirect('https://payment.'+sdkResponse.body.partialRedirectUrl);
 
   });
