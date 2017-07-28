@@ -683,3 +683,15 @@ exports.postIngenicoHostedCheckout = (req, res) => {
   });
 
 }
+
+exports.getIngenicoHostedCheckout = (req, res) => {
+  const hostedCheckoutId = req.params.hostedCheckoutId
+
+  connectSdk.hostedcheckouts.get(ingenicoMerchantID, hostedCheckoutId, null, (error, sdkResponse) => {
+    if (sdkResponse.body.errors)
+      console.warn('Your query could not be processed')
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
+  });
+}

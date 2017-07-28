@@ -170,6 +170,7 @@ app.get('/api/google-maps', apiController.getGoogleMaps);
 app.get('/api/ingenico', apiController.getIngenico);
 
 app.post('/api/ingenico', apiController.postIngenicoHostedCheckout)
+app.get('/api/ingenico-hosted/:hostedCheckoutId', apiController.getIngenicoHostedCheckout)
 
 /**
  * OAuth authentication routes. (Sign in)
