@@ -642,9 +642,28 @@ exports.getGoogleMaps = (req, res) => {
  * Ingenico API example.
  */
 exports.getIngenico = (req, res) => {
+  const status = req.query.status;
+  const hostedCheckoutId = req.query.hostedCheckoutId;
+  const returnmac = req.query.RETURNMAC;
+
+  if (status === 'SUCCESS'){
+    // This is the point where the hostedCheckoutId and RETURNMAC could be used to save
+    // the payment status in a database
+
+    connectSdk.hostedcheckouts.get(ingenicoMerchantID, hostedCheckoutId, null, (error, sdkResponse) => {
+      if (sdkResponse.body.errors)
+        console.warn('Your query could not be processed')
+
+      req.flash('success', { msg: 'Your hosted payment has been received with a status ' + sdkResponse.status});
+
+    });
+
+  }
+
   res.render('api/ingenico', {
     title: 'ingenico API'
   });
+
 };
 
 exports.postIngenicoHostedCheckout = (req, res) => {
@@ -670,12 +689,29 @@ exports.postIngenicoHostedCheckout = (req, res) => {
   };
 
   connectSdk.hostedcheckouts.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
+    // In order to record the hosted checkout status, the sdkResponse body has a
+    // hostedCheckoutId that could be saved to compare to a successful redirect back from
+    // the payment page
+
     if (sdkResponse.body.errors) {
-      req.flash('errors', { msg: 'Your query could not be processed.' });
+      req.flash('errors', { msg: 'There was a problem with the checkout and we can not redirect you at this time.' });
       return res.redirect('/api/ingenico');
     }
 
-    res.redirect(`https://payment.${sdkResponse.body.partialRedirectUrl}`);
+    req.flash('success', { msg: 'You will be redirected shortly to the payment page.' });
+    res.redirect('https://payment.'+sdkResponse.body.partialRedirectUrl);
+  });
+};
+
+exports.getIngenicoHostedCheckout = (req, res) => {
+  const hostedCheckoutId = req.params.hostedCheckoutId
+
+  connectSdk.hostedcheckouts.get(ingenicoMerchantID, hostedCheckoutId, null, (error, sdkResponse) => {
+    if (sdkResponse.body.errors)
+      console.warn('Your query could not be processed')
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
   });
 };
 

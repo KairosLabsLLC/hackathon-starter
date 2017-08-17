@@ -169,6 +169,7 @@ app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuth
 app.get('/api/google-maps', apiController.getGoogleMaps);
 app.get('/api/ingenico', apiController.getIngenico);
 app.post('/api/ingenico', apiController.postIngenicoHostedCheckout)
+app.get('/api/ingenico-hosted/:hostedCheckoutId', apiController.getIngenicoHostedCheckout)
 app.get('/api/ingenico-products', apiController.getIngenicoPaymentProducts);
 app.get('/api/ingenico-products/:productId', apiController.getIngenicoPaymentProduct);
 app.post('/api/ingenico-payment', apiController.postIngenicoPayment)
