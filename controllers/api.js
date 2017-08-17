@@ -649,12 +649,21 @@ exports.getIngenico = (req, res) => {
   if (status === 'SUCCESS'){
     // This is the point where the hostedCheckoutId and RETURNMAC could be used to save
     // the payment status in a database
-    req.flash('success', { msg: 'Your hosted payment has been received.' });
+
+    connectSdk.hostedcheckouts.get(ingenicoMerchantID, hostedCheckoutId, null, (error, sdkResponse) => {
+      if (sdkResponse.body.errors)
+        console.warn('Your query could not be processed')
+
+      req.flash('success', { msg: 'Your hosted payment has been received with a status ' + sdkResponse.status});
+
+    });
+
   }
 
   res.render('api/ingenico', {
     title: 'ingenico API'
   });
+
 };
 
 exports.postIngenicoHostedCheckout = (req, res) => {
