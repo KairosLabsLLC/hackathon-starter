@@ -820,3 +820,18 @@ exports.postIngenicoPayment = (req, res) => {
     return res.send(sdkResponse);
   });
 };
+
+exports.createIngenicoSession = (req, res) => {
+
+  const body = {
+    tokens: [
+    ]
+  };
+  connectSdk.sessions.create(ingenicoMerchantID, body, null, (error, sdkResponse) => {
+    if (sdkResponse.body.errors)
+      console.warn('Your query could not be processed')
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
+  });
+};

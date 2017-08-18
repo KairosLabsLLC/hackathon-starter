@@ -1,5 +1,4 @@
-/**
- * Module dependencies.
+/** Module dependencies.
  */
 const express = require('express');
 const compression = require('compression');
@@ -173,6 +172,7 @@ app.get('/api/ingenico-hosted/:hostedCheckoutId', apiController.getIngenicoHoste
 app.get('/api/ingenico-products', apiController.getIngenicoPaymentProducts);
 app.get('/api/ingenico-products/:productId', apiController.getIngenicoPaymentProduct);
 app.post('/api/ingenico-payment', apiController.postIngenicoPayment)
+app.post('/api/ingenico-session', apiController.createIngenicoSession)
 
 /**
  * OAuth authentication routes. (Sign in)
