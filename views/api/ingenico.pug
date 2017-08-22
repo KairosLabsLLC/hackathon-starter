@@ -66,13 +66,13 @@ block content
   br
   br
 
-  form(method='get', action='/api/ingenico-products')
+  form(id='ingenico-products', method='get', action='/api/ingenico-products')
     input(type='hidden', name='_csrf', value=_csrf)
     input(type='hidden', name='amount', value='3500')
     input(type='hidden', name='currencyCode', value='USD')
     input(type='hidden', name='locale', value='en_GB')
     input(type='hidden', name='countryCode', value='US')
-    input(style='background-color: #2869AC;color: #FFF', id='ingenico-products', type='submit', class='btn', value='List of payment products')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='List of payment products')
 
   br
 
@@ -97,13 +97,13 @@ block content
       div(id="ingenico-products-response")
         pre
 
-  form(method='get', action='/api/ingenico-products/1')
+  form(id='ingenico-specific-product',method='get', action='/api/ingenico-products/1')
     input(type='hidden', name='_csrf', value=_csrf)
     input(type='hidden', name='amount', value='10000')
     input(type='hidden', name='currencyCode', value='USD')
     input(type='hidden', name='locale', value='en_GB')
     input(type='hidden', name='countryCode', value='US')
-    input(style='background-color: #2869AC;color: #FFF', id='ingenico-specific-product', type='submit', class='btn', value='Payment Product Details')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Payment Product Details')
 
   br
 
@@ -150,7 +150,7 @@ block content
   .panel.panel-default
     .panel-heading(style='background-color: #2869AC;color: #FFF') Example of a successful payment creation response
     .panel-body
-      p The request is for a charge to me made with a minimum amount of fields needed
+      p The request is for a charge to me made. 
         | It contains data on the status of the payment as well as come card info used to
         | process the request.
       pre.
@@ -187,4 +187,86 @@ block content
       br
       h3 Connect SDK Response
       div(id="ingenico-payment-response")
+        pre
+
+  form(id='ingenico-session',method='get', action='/api/ingenico-session')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='10000')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Creating a new session')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Session Creation
+    .panel-body
+      p This is a request to create a new session id and customer id which will be valid
+        | for two hours.
+      pre.
+        const data = {
+        };
+      br
+      h3 Connect SDK Response
+      div(id="ingenico-session-response")
+        pre
+
+  form(id='ingenico-crypto',method='post', action='/api/ingenico-session')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='2980')
+    input(type='hidden', name='cvv', value='123')
+    input(type='hidden', name='cardholderName', value='Wile E. Coyote')
+    input(type='hidden', name='cardNumber', value='4567350000427977')
+    input(type='hidden', name='expiryDate', value='1220')
+    input(type='hidden', name='currencyCode', value='EUR')
+    input(type='hidden', name='locale', value='en_US')
+    input(type='hidden', name='additionalInfo', value='b')
+    input(type='hidden', name='countryCode', value='US')
+    input(type='hidden', name='zip', value='84536')
+    input(type='hidden', name='city', value='Monument Valley')
+    input(type='hidden', name='state', value='Utah')
+    input(type='hidden', name='street', value='Dessertroad')
+    input(type='hidden', name='houseNumber', value='13')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Public key')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Example of a successful payment creation response
+    .panel-body
+      p The request is for a charge to me made. 
+        | It contains data on the status of the payment as well as come card info used to
+        | process the request.
+      pre.
+        const data = {
+          cardPaymentMethodSpecificInput: {
+            paymentProductId: 1,
+            skipAuthentication: false,
+            card: {
+              cvv: "123",
+              cardholderName: "Wile E. Coyote",
+              cardNumber: "4567350000427977",
+              expiryDate: "1220"
+            }
+          },
+          order: {
+            amountOfMoney: {
+              currencyCode: "EUR",
+              amount: 2980
+            },
+            customer: {
+              locale: "en_US",
+              billingAddress: {
+                additionalInfo: "b",
+                countryCode: "US",
+                zip: "84536",
+                city: "Monument Valley",
+                state: "Utah",
+                street: "Desertroad",
+                houseNumber: "13"
+              },
+            },
+          }
+        };
+      br
+      h3 Client SDK Response
+      div(id="ingenico-crypto-response", class="output")
         pre

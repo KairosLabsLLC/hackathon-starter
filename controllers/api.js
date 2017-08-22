@@ -229,3 +229,15 @@ exports.createIngenicoSession = (req, res) => {
     return res.send(sdkResponse);
   });
 };
+
+exports.postEncryptedIngenicoPayment = (req, res) => {
+  const data = req.body;
+
+  connectSdk.payments.create(ingenicoMerchantID, data, null, (error, sdkResponse) => {
+    if (sdkResponse.body.errors)
+      console.warn('Your query could not be processed')
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(sdkResponse);
+  });
+};

@@ -102,6 +102,7 @@ app.get('/api/ingenico-products', apiController.getIngenicoPaymentProducts);
 app.get('/api/ingenico-products/:productId', apiController.getIngenicoPaymentProduct);
 app.post('/api/ingenico-payment', apiController.postIngenicoPayment)
 app.post('/api/ingenico-session', apiController.createIngenicoSession)
+app.post('/api/ingenico-encrypted', apiController.postEncryptedIngenicoPayment)
 
 /**
  * Error Handler.
