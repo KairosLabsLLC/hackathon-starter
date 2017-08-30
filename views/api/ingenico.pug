@@ -20,7 +20,7 @@ block content
   form(method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     input(type='hidden', name='amount', value='3500')
-    input(style='background-color: #2869AC;color: #FFF',type='submit', class='btn', value='Start Payment for $35.00')
+    input(style='background-color: #2869AC;color: #FFF',type='submit', class='btn', value='Hosted Payment of $35.00')
 
   h3
     i.fa.fa-credit-card
@@ -46,15 +46,14 @@ block content
           td 4567350000427977
           td 123
           td 4005
-
   p A full list can be found 
     a(href='https://epayments.developer-ingenico.com/documentation/testcases/') here
 
   .panel.panel-default
     .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Hosted Payment Page
     .panel-body
-      p This is the response you will get when the sdk creates an instance of a hosted payment page.
-
+      p This is the response you will get when the sdk successfully creates an instance of
+        |  a hosted payment page.
       pre.
         {
           "partialRedirectUrl" : "pay1.sandbox.secured-by-ingenico.com/checkout/3425-159ef9a3471444c8a0111bdfabe40aa:3b13baa5-2f82-4fec-8d04-99e0fd72d215:09e575e21053459eb2e62fc2692f85d3?requestToken=82dceb9b-874e-4673-9416-88feaeadb1e",
@@ -62,3 +61,84 @@ block content
           "RETURNMAC" : "f5b66cf9-c64c-4c8d-8171-b47205c89a56"
         }
 
+  form(id='ingenico-session',method='get', action='/api/ingenico-session')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='10000')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Creating a new session')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Ingenico Successful Session Creation
+    .panel-body
+      p This is a request to create a new session id and customer id which will be valid
+        | for two hours.
+      pre.
+        const data = {
+        };
+      br
+      h3 Connect SDK Response
+      div(id="ingenico-session-response")
+        pre
+
+  form(id='ingenico-crypto',method='post', action='/api/ingenico-session')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='amount', value='2980')
+    input(type='hidden', name='cvv', value='123')
+    input(type='hidden', name='cardholderName', value='Wile E. Coyote')
+    input(type='hidden', name='cardNumber', value='4567350000427977')
+    input(type='hidden', name='expiryDate', value='1220')
+    input(type='hidden', name='currencyCode', value='EUR')
+    input(type='hidden', name='locale', value='en_US')
+    input(type='hidden', name='additionalInfo', value='b')
+    input(type='hidden', name='countryCode', value='US')
+    input(type='hidden', name='zip', value='84536')
+    input(type='hidden', name='city', value='Monument Valley')
+    input(type='hidden', name='state', value='Utah')
+    input(type='hidden', name='street', value='Dessertroad')
+    input(type='hidden', name='houseNumber', value='13')
+    input(style='background-color: #2869AC;color: #FFF', type='submit', class='btn', value='Encrypted Payment')
+
+  br
+
+  .panel.panel-default
+    .panel-heading(style='background-color: #2869AC;color: #FFF') Example of a successful payment creation response
+    .panel-body
+      p The request is for a charge to me made. 
+        | It contains data on the status of the payment as well as come card info used to
+        | process the request.
+      pre.
+        const data = {
+          cardPaymentMethodSpecificInput: {
+            paymentProductId: 1,
+            skipAuthentication: false,
+            card: {
+              cvv: "123",
+              cardholderName: "Wile E. Coyote",
+              cardNumber: "4567350000427977",
+              expiryDate: "1220"
+            }
+          },
+          order: {
+            amountOfMoney: {
+              currencyCode: "EUR",
+              amount: 2980
+            },
+            customer: {
+              locale: "en_US",
+              billingAddress: {
+                additionalInfo: "b",
+                countryCode: "US",
+                zip: "84536",
+                city: "Monument Valley",
+                state: "Utah",
+                street: "Desertroad",
+                houseNumber: "13"
+              },
+            },
+          }
+        };
+      br
+      h3 Client SDK Response
+      div(id="ingenico-crypto-response", class="output")
+        pre
