@@ -1,11 +1,11 @@
 const connectSdk = require('connect-sdk-nodejs');
 
 connectSdk.init({
-  host: process.env.INGENICO_ENDPOINT_HOST,
-  scheme: "https",
-  port: 443,
-  apiKeyId: process.env.INGENICO_KEY_ID,
-  secretApiKey: process.env.INGENICO_SECRET
+	host: process.env.INGENICO_ENDPOINT_HOST,
+	scheme: "https",
+	port: 443,
+	apiKeyId: process.env.INGENICO_KEY_ID,
+	secretApiKey: process.env.INGENICO_SECRET
 });
 
 const ingenicoMerchantID = process.env.INGENICO_MERCHANT_ID;
@@ -15,9 +15,9 @@ const ingenicoMerchantID = process.env.INGENICO_MERCHANT_ID;
  * List of API examples.
  */
 exports.getApi = (req, res) => {
-  res.render('api/index', {
-    title: 'API Examples'
-  });
+	res.render('api/index', {
+		title: 'API Examples'
+	});
 };
 
 
@@ -26,17 +26,7 @@ exports.getApi = (req, res) => {
  * Ingenico API example.
  */
 exports.getIngenico = (req, res) => {
-  res.render('api/ingenico', {
-    title: 'ingenico API'
-  });
-};
-
-/**
- * GET /api/ingenico
- * Ingenico API example.
- */
-exports.getIngenico = (req, res) => {
-  res.render('api/ingenico', {
-    title: 'ingenico API'
-  });
+	res.render('api/ingenico', {
+		title: 'ingenico API'
+	});
 };
